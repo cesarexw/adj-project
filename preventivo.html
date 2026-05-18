@@ -477,8 +477,14 @@
     .body { padding: 0 1.5rem 4rem; }
     .cover { padding: 3rem 2rem 2.5rem; }
     .footer { padding: 1.75rem 2rem; }
-    .item { grid-template-columns: 180px 1fr auto; gap: 1rem; }
+    .item { grid-template-columns: 140px 1fr auto; gap: 1rem; }
     .section-num { font-size: 0.75em; }
+  }
+
+  @media (max-width: 720px) {
+    .item { grid-template-columns: 100px 1fr auto; gap: 0.75rem; }
+    .item:has(.item-price[style*="display:none"]) { grid-template-columns: 100px 1fr; }
+    .item-label { font-size: 0.8125em; }
   }
 
   /* ── MOBILE (≤640px) ── */
@@ -706,26 +712,26 @@
     <div class="items">
       <div class="item">
         <div class="item-label">B1 &nbsp; Manutenzione ordinaria sito e reportistica</div>
-        <div class="item-desc">Aggiornamenti sicurezza WordPress, backup periodici, monitoraggio uptime, aggiornamenti contenuti. Le attività di data upload gestibili autonomamente dal team ADJ non rientrano nel conteggio. Incluso: report mensile GA4 con analisi traffico, comportamento utenti, performance SEO e raccomandazioni operative. Range definitivo da concordare in fase di analisi.</div>
-        <div class="item-price">120 – 250 €<span class="price-sub">/mese</span></div>
+        <div class="item-desc">Aggiornamenti sicurezza WordPress, backup periodici, monitoraggio uptime, aggiornamenti contenuti. Le attività di data upload gestibili autonomamente dal team ADJ non rientrano nel conteggio. Incluso: report mensile GA4 con analisi traffico, comportamento utenti, performance SEO e raccomandazioni operative.</div>
+        <div class="item-price">100 €<span class="price-sub">/mese</span></div>
       </div>
       <div class="item">
         <div class="item-label">B2 &nbsp; Blog cybersecurity</div>
         <div class="item-desc">Redazione e pubblicazione di 2–4 articoli/mese ottimizzati per SEO. Temi principali: cybersecurity, IT, e argomenti da definire in fase di analisi — inclusi contenuti orientati ai bisogni e ai problemi specifici delle aziende clienti di ADJ, per aumentare rilevanza e valore percepito.</div>
-        <div class="item-price">80 – 150 €<span class="price-sub">/mese</span></div>
+        <div class="item-price">120 €<span class="price-sub">/mese</span></div>
       </div>
       <div class="item">
         <div class="item-label">B3 &nbsp; Gestione social media</div>
         <div class="item-desc">Copywriting, caption e copy per i post (minimo 8/mese per piattaforma attiva), piano editoriale mensile, programmazione e scheduling delle pubblicazioni, monitoraggio performance e strategia. Non è inclusa la produzione di contenuti visivi (foto, video, grafiche): quella rimane in capo al team interno ADJ, con cui viene pianificata trimestralmente per garantire continuità.</div>
-        <div class="item-price">120 – 180 €<span class="price-sub">/mese</span></div>
+        <div class="item-price">180 €<span class="price-sub">/mese</span></div>
       </div>
       <div class="item">
         <div class="item-label">
           B4 &nbsp; Campagne Google Ads / Meta Ads
-          <span class="tag tag-warn">opzionale</span>
+         
         </div>
-        <div class="item-desc">Pianificazione, configurazione e ottimizzazione continuativa delle campagne a pagamento. Il budget pubblicitario è sempre intestato ad ADJ ed è separato dalla fee di gestione. Attivabile in qualsiasi momento su richiesta.</div>
-        <div class="item-price opt">150 – 300 €<span class="price-sub">/mese + budget ads</span></div>
+        <div class="item-desc">Pianificazione, configurazione e ottimizzazione continuativa delle campagne a pagamento. Il budget pubblicitario è sempre intestato ad ADJ ed è separato dalla fee di gestione.</div>
+        <div class="item-price opt">200 €<span class="price-sub">/mese + budget ads</span></div>
       </div>
       <div class="item">
         <div class="item-label">
@@ -736,38 +742,19 @@
         <div class="item-price opt" style="display:none"></div>
       </div>
     </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); border-radius:4px; overflow:hidden; margin-top:1.5rem;">
-      <div class="section-total-row" style="background: var(--success-light); border-radius:0; margin:0;">
-        <span class="section-total-label" style="color: #1A4A2E;">Soluzione base<br><span style="font-size:0.85em;font-weight:400;text-transform:none;">B1+B2+B3+B4 al minimo</span></span>
-        <span class="section-total-amount" style="color: #1A4A2E;">370 €/mese</span>
-      </div>
-      <div class="section-total-row" style="background: #D4EDE0; border-radius:0; margin:0;">
-        <span class="section-total-label" style="color: #0A3A20;">Soluzione completa<br><span style="font-size:0.85em;font-weight:400;text-transform:none;">B1+B2+B3+B4 al massimo</span></span>
-        <span class="section-total-amount" style="color: #0A3A20;">630 €/mese</span>
-      </div>
+    <div class="section-total-row" style="background: var(--success-light); margin-top:1.5rem;">
+      <span class="section-total-label" style="color: #1A4A2E;">Canone mensile totale (B1+B2+B3+B4)</span>
+      <span class="section-total-amount" style="color: #1A4A2E;">600 €/mese</span>
     </div>
   </div>
 
   <!-- TOTALE ANNO -->
   <div class="section fade fade-5">
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
-      <div>
-        <div style="font-size:0.688em;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:0.75rem;padding-bottom:6px;border-bottom:1px solid var(--border);">Soluzione base</div>
-        <table class="totals-table">
-          <tr><td>Setup una tantum (3 mesi)</td><td>4.900 €</td></tr>
-          <tr><td>9 mesi di canone base</td><td>3.330 €</td></tr>
-          <tr class="grand"><td>Totale primo anno</td><td>8.230 €</td></tr>
-        </table>
-      </div>
-      <div>
-        <div style="font-size:0.688em;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:0.75rem;padding-bottom:6px;border-bottom:1px solid var(--border);">Soluzione completa</div>
-        <table class="totals-table">
-          <tr><td>Setup una tantum (3 mesi)</td><td>4.900 €</td></tr>
-          <tr><td>9 mesi di canone completo</td><td>5.670 €</td></tr>
-          <tr class="grand"><td>Totale primo anno</td><td>10.570 €</td></tr>
-        </table>
-      </div>
-    </div>
+    <table class="totals-table">
+      <tr><td>Setup una tantum (3 mesi)</td><td>4.900 €</td></tr>
+      <tr><td>9 mesi di canone mensile</td><td>5.400 €</td></tr>
+      <tr class="grand"><td>Totale primo anno</td><td>10.300 €</td></tr>
+    </table>
   </div>
 
   <!-- DURATA E RINNOVO -->

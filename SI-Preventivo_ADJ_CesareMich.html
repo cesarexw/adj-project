@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preventivo ADJ — Cesare Mich</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F8F9FB;
+    --dark: #0F2540;
+    --text: #18253A;
+    --muted: #546070;
+    --light: #A0AEBB;
+    --border: #D8E0E9;
+    --accent: #1B4F8A;
+    --accent-light: #E8F1FA;
+    --success: #0F4A2E;
+    --success-light: #E6F4EC;
+    --warn: #5A3A00;
+    --warn-light: #FDF3E2;
+    --surface: #EDF1F6;
+  }
+
+  html { scroll-behavior: smooth; font-size: 1em; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade { opacity: 0; animation: fadeUp 0.6s ease forwards; }
+  .fade-1 { animation-delay: 0.05s; }
+  .fade-2 { animation-delay: 0.15s; }
+  .fade-3 { animation-delay: 0.25s; }
+  .fade-4 { animation-delay: 0.35s; }
+  .fade-5 { animation-delay: 0.45s; }
+  .fade-6 { animation-delay: 0.55s; }
+
+  /* ── DARK MODE ── */
+  body.dark {
+    --bg: #0D1B2E;
+    --dark: #1C3A5E;
+    --text: #E8EEF5;
+    --muted: #8FA8C0;
+    --light: #4A6480;
+    --border: #1E3350;
+    --accent: #4A8FD4;
+    --accent-light: #0F2540;
+    --success: #1A5C38;
+    --success-light: #0A2018;
+    --warn: #7A5200;
+    --warn-light: #1E1400;
+    --surface: #111F30;
+  }
+  body.dark .fs-bar-wrap { box-shadow: 0 1px 8px rgba(0,0,0,0.3); }
+  body.dark .cover { background: #091628; }
+  body.dark .totals-table tr.grand td { border-top-color: var(--accent); }
+  body.dark .section-total-row { background: var(--surface); }
+  body.dark .note { background: var(--accent-light); }
+  body.dark .note.success { background: var(--success-light); }
+  body.dark .duration-cell { background: var(--surface); }
+  body.dark .condition-cell { background: var(--surface); }
+  body.dark .footer { border-top-color: var(--border); }
+  body.dark .cover-wrap { border-bottom: 1px solid #1E3350; }
+
+  /* ── DARK TOGGLE ── */
+  .dm-sep { width: 1px; height: 20px; background: var(--border); margin: 0 6px; }
+  .dm-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.688em;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    padding: 4px 10px;
+    cursor: pointer;
+    height: 26px;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .dm-btn:hover { background: var(--accent); color: #fff; }
+  .dm-btn svg { flex-shrink: 0; }
+
+  /* ── FONT SIZE CONTROLS ── */
+  .fs-bar-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 8px rgba(15,37,64,0.06);
+  }
+  .fs-bar {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .fs-label {
+    font-size: 0.688em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-right: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .fs-label svg { color: var(--accent); }
+  .fs-btn {
+    width: 26px; height: 26px;
+    border: 1px solid var(--accent);
+    background: transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 1em;
+    color: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background 0.15s, color 0.15s;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .fs-btn:hover { background: var(--accent); color: #fff; }
+  .fs-size { font-size: 0.75em; color: var(--accent); min-width: 34px; text-align: center; font-weight: 600; }
+
+  /* ── COVER ── */
+  .cover-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+  .cover {
+    background: var(--dark);
+    color: #fff;
+    padding: 3.5rem 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+  .cover-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 3rem;
+  }
+  .cover-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.25em;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+  }
+  .cover-role {
+    font-size: 0.75em;
+    font-weight: 300;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+  .cover-meta {
+    text-align: right;
+    font-size: 0.75em;
+    color: rgba(255,255,255,0.55);
+    line-height: 2;
+  }
+  .cover-meta strong {
+    display: block;
+    font-size: 0.812em;
+    font-weight: 500;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.05em;
+  }
+  .cover-dest-label {
+    font-size: 0.625em;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 8px;
+  }
+  .cover-dest-company {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.75em;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.2;
+  }
+  .cover-dest-address {
+    font-size: 0.812em;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+  }
+  .cover-line {
+    width: 40px;
+    height: 1px;
+    background: rgba(255,255,255,0.25);
+    margin: 1.5rem 0;
+  }
+  .cover-intro {
+    font-size: 0.875em;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.85;
+    max-width: 640px;
+    font-weight: 300;
+  }
+
+  /* ── BODY CONTAINER ── */
+  .body { max-width: 1100px; margin: 0 auto; padding: 0 3rem 5rem; }
+
+  /* ── SECTION ── */
+  .section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+  .section:last-of-type { border-bottom: none; }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .section-num {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.812em;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    min-width: 36px;
+    padding-top: 6px;
+  }
+  .section-info { flex: 1; }
+  .section-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.25em;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .section-sub {
+    font-size: 0.75em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  .section-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    background: var(--surface);
+    border-radius: 4px;
+    margin-top: 1.5rem;
+  }
+  .section-total-label { font-size: 0.688em; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+  .section-total-amount { font-size: 1.062em; font-weight: 700; color: var(--accent); font-family: 'Outfit', sans-serif; }
+
+  /* ── LINE ITEMS ── */
+  .items { display: flex; flex-direction: column; }
+  .item {
+    display: grid;
+    grid-template-columns: 220px 1fr auto;
+    gap: 1.5rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .item:last-child { border-bottom: none; }
+  .item-label {
+    font-size: 0.875em;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+    padding-top: 1px;
+  }
+  .item-desc {
+    font-size: 0.844em;
+    color: var(--muted);
+    line-height: 1.75;
+    font-weight: 400;
+  }
+  .item-price {
+    font-size: 0.938em;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text);
+    text-align: right;
+    white-space: nowrap;
+    padding-top: 1px;
+  }
+  .item-price.tbd {
+    font-size: 0.75em;
+    color: var(--light);
+    font-style: italic;
+    font-weight: 400;
+  }
+  .item-price.opt {
+    font-size: 0.812em;
+    font-weight: 500;
+    color: #7A5200;
+  }
+  .price-sub { font-size: 0.688em; color: var(--light); display: block; font-weight: 400; }
+
+  /* ── TAGS ── */
+  .tag {
+    display: inline-block;
+    font-size: 0.625em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-top: 6px;
+    margin-right: 4px;
+  }
+  .tag-accent { background: var(--accent-light); color: var(--accent); }
+  .tag-success { background: var(--success-light); color: var(--success); }
+  .tag-warn { background: var(--warn-light); color: var(--warn); }
+  .tag-neutral { background: var(--surface); color: var(--muted); }
+  .tag-plus { background: #E8F0FF; color: #1A3A9A; border: 1px solid #B8CAEE; font-weight: 700; letter-spacing: 0.15em; }
+
+  /* ── TOTALS TABLE ── */
+  .totals-table { width: 100%; border-collapse: collapse; margin: 2rem 0; }
+  .totals-table td {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.875em;
+    color: var(--muted);
+    font-weight: 300;
+  }
+  .totals-table td:last-child { text-align: right; color: var(--text); }
+  .totals-table tr.grand td {
+    border-bottom: none;
+    border-top: 1px solid var(--accent);
+    padding-top: 16px;
+    margin-top: 4px;
+    font-weight: 500;
+    color: var(--text);
+    font-size: 1em;
+  }
+  .totals-table tr.grand td:first-child {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.062em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .totals-table tr.grand td:last-child {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.062em;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* ── DURATION ── */
+  .duration-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 1.5rem;
+  }
+  .duration-cell {
+    background: var(--bg);
+    padding: 1.5rem;
+  }
+  .duration-big {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3em;
+    font-weight: 300;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .duration-big.plus { color: #1A6A3A; }
+  .duration-cell-title { font-size: 0.875em; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .duration-cell-desc { font-size: 0.812em; color: var(--muted); line-height: 1.7; font-weight: 400; }
+
+  /* ── NOTE BLOCKS ── */
+  .note {
+    border-left: 2px solid var(--accent);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    background: var(--accent-light);
+    border-radius: 0 4px 4px 0;
+  }
+  .note.success { border-color: #1A6A3A; background: var(--success-light); }
+  .note-title { font-size: 0.75em; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; font-weight: 400; }
+  .note.success .note-title { color: #1A6A3A; }
+  .note-item {
+    font-size: 0.844em;
+    color: var(--muted);
+    line-height: 1.75;
+    padding-left: 14px;
+    position: relative;
+    margin-top: 5px;
+    font-weight: 400;
+  }
+  .note-item::before { content: "—"; position: absolute; left: 0; color: var(--light); }
+  .note-item strong { color: var(--text); font-weight: 500; }
+
+  /* ── CONDITIONS ── */
+  .conditions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-top: 1.5rem; }
+  .condition-cell { background: var(--bg); padding: 1.25rem 1.5rem; }
+  .condition-label { font-size: 0.625em; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; font-weight: 500; }
+  .condition-text { font-size: 0.844em; color: var(--muted); line-height: 1.7; font-weight: 400; }
+  .condition-text strong { color: var(--text); font-weight: 500; }
+
+  /* ── FOOTER ── */
+  .footer {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    margin-top: 1rem;
+  }
+  .footer-left { font-size: 0.812em; color: var(--muted); font-weight: 400; }
+  .footer-left strong { color: var(--text); font-weight: 600; display: block; margin-bottom: 2px; }
+  .footer-right { font-size: 0.75em; color: var(--light); letter-spacing: 0.08em; text-align: right; line-height: 1.8; }
+
+  /* ── PRINT ── */
+  @media print {
+    .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .footer { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .fade { opacity: 1 !important; transform: none !important; }
+  }
+
+  /* ── TABLET (≤900px) ── */
+  @media (max-width: 900px) {
+    .fs-bar { padding: 0.5rem 1.5rem; }
+    .body { padding: 0 1.5rem 4rem; }
+    .cover { padding: 3rem 2rem 2.5rem; }
+    .footer { padding: 1.75rem 2rem; }
+    .item { grid-template-columns: 180px 1fr auto; gap: 1rem; }
+    .section-num { font-size: 0.75em; }
+  }
+
+  /* ── MOBILE (≤640px) ── */
+  @media (max-width: 640px) {
+    .fs-bar { padding: 0.5rem 1rem; gap: 6px; }
+    .fs-label { display: none; }
+    .dm-btn span { display: none; }
+    .dm-btn { padding: 4px 8px; gap: 0; }
+    .cover { padding: 2rem 1.25rem 1.75rem; }
+    .cover-top { flex-direction: column; gap: 1.25rem; }
+    .cover-meta { text-align: left; }
+    .cover-name { font-size: 1.75em; }
+    .cover-dest-company { font-size: 1.25em; }
+    .body { padding: 0 1.25rem 3rem; }
+    .section-head { gap: 0.75rem; }
+    .section-num { min-width: 28px; }
+    .section-title { font-size: 1em; }
+    .item { grid-template-columns: 1fr; gap: 0.4rem; padding: 1rem 0; }
+    .item-label { font-size: 0.9375em; }
+    .item-price { text-align: left; font-size: 0.9375em; }
+    .item-price.tbd { display: inline; }
+    .duration-grid { grid-template-columns: 1fr; }
+    .duration-big { font-size: 2.25em; }
+    .conditions-grid { grid-template-columns: 1fr; }
+    .totals-table td { font-size: 0.875em; }
+    .footer { flex-direction: column; gap: 0.75rem; padding: 1.25rem; }
+    .footer-right { text-align: left; }
+    .note { padding: 1rem; }
+    .section { padding: 2rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="fs-bar-wrap">
+<div class="fs-bar">
+  <button class="dm-btn" id="dm-btn" onclick="toggleDark()" title="Attiva/disattiva dark mode">
+    <svg id="dm-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <span id="dm-label">Dark mode</span>
+  </button>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span class="fs-label">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+      Dimensione carattere
+    </span>
+    <button class="fs-btn" onclick="changeFS(-1)" title="Riduci testo">−</button>
+    <span class="fs-size" id="fs-val">100%</span>
+    <button class="fs-btn" onclick="changeFS(1)" title="Aumenta testo">+</button>
+  </div>
+</div>
+</div>
+
+<div class="cover-wrap">
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-top fade fade-1">
+    <div>
+      <div class="cover-name">Cesare Mich</div>
+      <div class="cover-role">Digital Marketer &nbsp;·&nbsp; Sviluppo web, Brand, Comunicazione digitale</div>
+    </div>
+    <div class="cover-meta">
+      <strong>Preventivo n. 001/2025</strong>
+      14 maggio 2025<br>
+      Validità: 30 giorni
+    </div>
+  </div>
+
+  <div class="fade fade-2">
+    <div class="cover-dest-label">Destinatario</div>
+    <div class="cover-dest-company">ADJ S.r.l.</div>
+    <div class="cover-dest-address">Via della Faeta, 1 — 00030 San Cesareo (RM) &nbsp;·&nbsp; P.IVA 04446661219</div>
+  </div>
+
+  <div class="cover-line fade fade-3"></div>
+
+  <div class="cover-intro fade fade-4">
+    Offerta di consulenza e sviluppo digitale per il rinnovamento della presenza online di ADJ. Obiettivo: un ecosistema digitale solido, orientato al business B2B, gestibile in autonomia dal team interno. Il progetto si articola in 3 mesi di sviluppo e lancio, seguiti da 9 mesi di servizi continuativi.
+  </div>
+</div>
+</div><!-- /cover-wrap -->
+
+<!-- BODY -->
+<div class="body">
+
+  <!-- A1 -->
+  <div class="section fade fade-1">
+    <div class="section-head">
+      <div class="section-num">A1</div>
+      <div class="section-info">
+        <div class="section-title">Rinnovamento brand e strategia digitale</div>
+        <div class="section-sub">Una tantum &nbsp;·&nbsp; Fase di sviluppo</div>
+      </div>
+    </div>
+    <div class="items">
+      <div class="item">
+        <div class="item-label">Analisi e sessioni di allineamento</div>
+        <div class="item-desc">Analisi del posizionamento attuale, dei competitor e dei target B2B. Call dedicate per raccolta materiali e brief approfondito. Nei primi 3–4 mesi sono previsti appuntamenti fissi settimanali (max 2/settimana) per confronto diretto, ricezione materiali e aggiornamento sviluppo.</div>
+        <div class="item-price tbd">da definire</div>
+      </div>
+      <div class="item">
+        <div class="item-label">Riposizionamento brand: da consumer a B2B</div>
+        <div class="item-desc">Ridefinizione dell'identità di ADJ come azienda B2B di riferimento. Valori cardine: affidabilità, sicurezza, qualità — supportati da certificazioni esclusive e da un rapporto diretto con un laboratorio in Cina per la produzione di hardware personalizzato. Il posizionamento segna il passaggio da brand hardware consumer a interlocutore solido per operatori IT, grandi distributori e commesse di valore.
+          <br><br>
+          <div style="margin-top:4px; padding:14px 16px; background:var(--accent-light); border:1px solid #b8cfe8; border-radius:4px;">
+            <div style="font-size:0.8125em; color:var(--muted); margin-bottom:10px; line-height:1.6;">Per approfondire il riposizionamento, è stata preparata un'analisi dei principali competitor e siti di riferimento nel segmento B2B — con spunti concreti su struttura, comunicazione e layout da cui ADJ può trarre ispirazione.</div>
+            <a href="competitor_analysis_ADJ.html" target="_blank" style="display:inline-flex;align-items:center;gap:8px;font-size:0.8125em;font-weight:600;color:#fff;background:var(--accent);padding:8px 16px;border-radius:3px;text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              Visualizza analisi competitor
+            </a>
+          </div>
+        </div>
+        <div class="item-price tbd">da definire</div>
+      </div>
+      <div class="item">
+        <div class="item-label">Architettura informativa e tone of voice</div>
+        <div class="item-desc">Struttura del sito, naming delle sezioni, tono di voce istituzionale e commerciale, linee guida per i contenuti coerenti con il posizionamento B2B.</div>
+        <div class="item-price tbd">da definire</div>
+      </div>
+      <div class="item">
+        <div class="item-label">Strategia digitale complessiva</div>
+        <div class="item-desc">Piano d'azione integrato: sito, social, blog, campagne. Definizione KPI e obiettivi misurabili nel tempo.</div>
+        <div class="item-price tbd">da definire</div>
+      </div>
+    </div>
+    <div class="section-total-row">
+      <span class="section-total-label">Totale A1</span>
+      <span class="section-total-amount">800 €</span>
+    </div>
+  </div>
+
+  <!-- A2 -->
+  <div class="section fade fade-2">
+    <div class="section-head">
+      <div class="section-num">A2</div>
+      <div class="section-info">
+        <div class="section-title">Sviluppo sito web</div>
+        <div class="section-sub">Una tantum &nbsp;·&nbsp; Fase di sviluppo</div>
+      </div>
+    </div>
+    <div class="items">
+      <div class="item">
+        <div class="item-label">Sito istituzionale WordPress</div>
+        <div class="item-desc">Sviluppo completo del sito: azienda, soluzioni, garanzie, partnership (es. Polizia Postale), contatti, gestione RMA. Design responsive ottimizzato per tutti i dispositivi.</div>
+        <div class="item-price tbd">da definire</div>
+      </div>
+      <div class="item">
+        <div class="item-label">Valutazione e configurazione hosting</div>
+        <div class="item-desc">Analisi e selezione del provider hosting più adatto, con focus su performance (velocità, uptime garantito) e sicurezza (SSL, firewall, backup automatici, protezione DDoS). Prerequisito critico per l'affidabilità dell'intera infrastruttura.</div>
+        <div class="item-price tbd">da definire</div>
+      </div>
+      <div class="item">
+        <div class="item-label">Area ADJ Business (B2B)</div>
+        <div class="item-desc">Sezione riservata a clienti con P.IVA: registrazione e validazione, listini personalizzati per tipologia cliente, catalogo prodotti con prezzi aggiornati, storico ordini. Integrazione con il gestionale coordinata con il referente tecnico interno ADJ.</div>
+        <div class="item-price tbd">da definire</div>
+      </div>
+      <div class="item">
+        <div class="item-label">Archivio driver e documentazione tecnica</div>
+        <div class="item-desc">Area download per driver, schede tecniche e manuali. Aggiornabile autonomamente dal team ADJ — riduce il carico sull'assistenza.</div>
+        <div class="item-price tbd">da definire</div>
+      </div>
+      <div class="item">
+        <div class="item-label">Blog cybersecurity</div>
+        <div class="item-desc">Sezione blog integrata e ottimizzata per SEO, con focus su cybersecurity e tematiche IT per il target B2B.</div>
+        <div class="item-price tbd">da definire</div>
+      </div>
+      <div class="item">
+        <div class="item-label">SEO on-page e tracciamento</div>
+        <div class="item-desc">Configurazione Google Analytics 4, Search Console, tracciamento eventi. Ottimizzazione SEO on-page di tutte le pagine principali.</div>
+        <div class="item-price tbd">da definire</div>
+      </div>
+      <div class="item">
+        <div class="item-label">Autonomia e strumenti per il team ADJ</div>
+        <div class="item-desc">CMS configurato per aggiornamenti autonomi senza intervento tecnico esterno. A scelta: gestione condivisa con intervento diretto, oppure consegna di strumenti e video tutorial dedicati per autonomia totale su ogni area del sito.</div>
+        <div class="item-price tbd">da definire</div>
+      </div>
+    </div>
+    <div class="section-total-row">
+      <span class="section-total-label">Totale A2</span>
+      <span class="section-total-amount">3.500 €</span>
+    </div>
+  </div>
+
+  <!-- A3 -->
+  <div class="section fade fade-3">
+    <div class="section-head">
+      <div class="section-num">A3</div>
+      <div class="section-info">
+        <div class="section-title">Strategia social e kit editoriale</div>
+        <div class="section-sub">Una tantum &nbsp;·&nbsp; Fase di sviluppo</div>
+      </div>
+    </div>
+    <div class="items">
+      <div class="item">
+        <div class="item-label">Analisi piattaforme e strategia social B2B</div>
+        <div class="item-desc">Valutazione delle piattaforme più adatte al posizionamento B2B di ADJ, con focus su LinkedIn per raggiungere decision maker, partner e distributori. Analisi di opportunità sugli altri canali rilevanti (Instagram per brand awareness, YouTube per contenuti tecnici).</div>
+        <div class="item-price tbd">da definire</div>
+      </div>
+      <div class="item">
+        <div class="item-label">Piano editoriale e tone of voice</div>
+        <div class="item-desc">Definizione del tono di voce social, dei format e delle rubriche tematiche coerenti con il brand B2B. Piano editoriale strutturato per i primi 2 mesi, coordinato con il team grafico/foto/video interno di ADJ.</div>
+        <div class="item-price tbd">da definire</div>
+      </div>
+      <div class="item">
+        <div class="item-label">2 mesi di contenuti pronti alla pubblicazione</div>
+        <div class="item-desc">Minimo 8 post/mese per piattaforma attiva, con testi, caption e copy completi. Incluse indicazioni per contenuti video brevi (reel, shorts) da produrre con il team interno. Ogni trimestre: piano contenuti condiviso con il team ADJ, con indicazione delle risorse necessarie e delle scadenze di produzione.</div>
+        <div class="item-price tbd">da definire</div>
+      </div>
+    </div>
+    <div class="section-total-row">
+      <span class="section-total-label">Totale A3</span>
+      <span class="section-total-amount">1.200 €</span>
+    </div>
+  </div>
+
+  <!-- SETUP TOTALE -->
+  <div class="section fade fade-4">
+    <table class="totals-table">
+      <tr><td>A1 &nbsp;— Brand e strategia</td><td>800 €</td></tr>
+      <tr><td>A2 &nbsp;— Sviluppo sito web</td><td>3.500 €</td></tr>
+      <tr><td>A3 &nbsp;— Strategia social e kit editoriale</td><td>1.200 €</td></tr>
+      <tr class="grand"><td>Totale setup (una tantum)</td><td>5.500 €</td></tr>
+    </table>
+  </div>
+
+  <!-- B -->
+  <div class="section fade fade-4">
+    <div class="section-head">
+      <div class="section-num" style="color: #2A6A44;">B</div>
+      <div class="section-info">
+        <div class="section-title">Servizi continuativi</div>
+        <div class="section-sub">Canone mensile &nbsp;·&nbsp; 9 mesi post-lancio</div>
+      </div>
+    </div>
+    <div class="items">
+      <div class="item">
+        <div class="item-label">B1 &nbsp; Manutenzione ordinaria sito</div>
+        <div class="item-desc">Aggiornamenti sicurezza WordPress, backup periodici, monitoraggio uptime, aggiornamenti contenuti. Le attività di data upload gestibili autonomamente dal team ADJ non rientrano nel conteggio. Range definitivo da concordare in fase di analisi.</div>
+        <div class="item-price">120 – 250 €<span class="price-sub">/mese</span></div>
+      </div>
+      <div class="item">
+        <div class="item-label">B2 &nbsp; Blog cybersecurity</div>
+        <div class="item-desc">Redazione e pubblicazione di 2–4 articoli/mese ottimizzati per SEO su tematiche di cybersecurity e IT per il target ADJ.</div>
+        <div class="item-price">80 – 150 €<span class="price-sub">/mese</span></div>
+      </div>
+      <div class="item">
+        <div class="item-label">B3 &nbsp; Analytics e reportistica</div>
+        <div class="item-desc">Report mensile GA4 con analisi traffico, comportamento utenti, performance SEO e raccomandazioni operative.</div>
+        <div class="item-price">50 €<span class="price-sub">/mese</span></div>
+      </div>
+      <div class="item">
+        <div class="item-label">B4 &nbsp; Gestione social media</div>
+        <div class="item-desc">Piano editoriale mensile, copy e caption (minimo 8 post/mese per piattaforma attiva), scheduling, monitoraggio performance. Pianificazione trimestrale condivisa con il team ADJ per garantire continuità nella produzione dei contenuti visivi interni.</div>
+        <div class="item-price">120 – 180 €<span class="price-sub">/mese</span></div>
+      </div>
+      <div class="item">
+        <div class="item-label">
+          B5 &nbsp; Campagne Google Ads / Meta Ads
+          <span class="tag tag-warn">opzionale</span>
+        </div>
+        <div class="item-desc">Pianificazione, configurazione e ottimizzazione continuativa delle campagne a pagamento. Il budget pubblicitario è sempre intestato ad ADJ ed è separato dalla fee di gestione. Attivabile in qualsiasi momento su richiesta.</div>
+        <div class="item-price opt">150 – 300 €<span class="price-sub">/mese + budget ads</span></div>
+      </div>
+      <div class="item">
+        <div class="item-label">
+          B6 &nbsp; Valutazione e implementazione strumenti AI
+          <span class="tag tag-plus">+plus</span>
+        </div>
+        <div class="item-desc">Analisi delle opportunità di integrazione dell'intelligenza artificiale nei flussi di lavoro di ADJ: automazione contenuti, assistenti per il team commerciale e di assistenza, ottimizzazione della gestione del catalogo e delle comunicazioni B2B. La valutazione include una mappatura degli strumenti più adatti al contesto operativo di ADJ e un piano di implementazione progressiva — senza stravolgere i processi esistenti.</div>
+        <div class="item-price opt" style="color: #1A4A8A; font-size:12px; font-style:italic; font-weight:400;">da valutare insieme</div>
+      </div>
+    </div>
+    <div class="section-total-row" style="background: var(--success-light);">
+      <span class="section-total-label" style="color: #1A4A2E;">Canone mensile (senza ads)</span>
+      <span class="section-total-amount" style="color: #1A4A2E;">370 – 630 €/mese</span>
+    </div>
+  </div>
+
+  <!-- TOTALE ANNO -->
+  <div class="section fade fade-5">
+    <table class="totals-table">
+      <tr><td>Setup una tantum (3 mesi)</td><td>5.500 €</td></tr>
+      <tr><td>9 mesi di canone (minimo)</td><td>3.330 €</td></tr>
+      <tr><td>9 mesi di canone (massimo)</td><td>5.670 €</td></tr>
+      <tr class="grand"><td>Totale primo anno</td><td>8.830 – 11.170 €</td></tr>
+    </table>
+  </div>
+
+  <!-- DURATA E RINNOVO -->
+  <div class="section fade fade-5">
+    <div class="section-head">
+      <div class="section-num" style="color: var(--border); font-size: 36px;">↻</div>
+      <div class="section-info">
+        <div class="section-title">Durata e condizioni di rinnovo</div>
+        <div class="section-sub">Struttura del progetto nel tempo</div>
+      </div>
+    </div>
+    <div class="duration-grid">
+      <div class="duration-cell">
+        <div class="duration-big">3</div>
+        <div class="duration-cell-title">Mesi di sviluppo e lancio</div>
+        <div class="duration-cell-desc">Fasi A1 + A2 + A3. Decorre dalla ricezione completa di tutti i materiali e credenziali necessarie. Appuntamenti fissi settimanali (max 2/settimana) per allineamento continuo.</div>
+      </div>
+      <div class="duration-cell">
+        <div class="duration-big">9</div>
+        <div class="duration-cell-title">Mesi di servizi continuativi</div>
+        <div class="duration-cell-desc">Fase B attiva dal lancio del sito. Manutenzione, blog, analytics, social media — con pianificazione trimestrale condivisa.</div>
+      </div>
+      <div class="duration-cell">
+        <div class="duration-big plus">+</div>
+        <div class="duration-cell-title">Rinnovo: 6 o 12 mesi</div>
+        <div class="duration-cell-desc">Al termine del primo anno, le condizioni vengono rivalutate congiuntamente sulla base dei risultati raggiunti e delle nuove esigenze emerse.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MANUTENZIONE EVOLUTIVA -->
+  <div class="section fade fade-5">
+    <div class="note">
+      <div class="note-title">Manutenzione ordinaria vs evolutiva</div>
+      <div class="note-item">La <strong>manutenzione ordinaria</strong> (sicurezza, backup, aggiornamenti contenuto, piccole correzioni) è inclusa nel canone mensile B1.</div>
+      <div class="note-item">La <strong>manutenzione evolutiva</strong> — nuove funzionalità, sezioni aggiuntive, integrazioni nuove — viene concordata preventivamente e quotata separatamente.</div>
+      <div class="note-item">Attività extra non previste dal canone: <strong>40 €/ora</strong> — tariffa riservata nell'ambito della collaborazione continuativa.</div>
+    </div>
+  </div>
+
+  <!-- COME LAVORO -->
+  <div class="section fade fade-6">
+    <div class="section-head">
+      <div class="section-num" style="color: var(--border); font-size: 32px; min-width: 52px;">◈</div>
+      <div class="section-info">
+        <div class="section-title">Come lavoro</div>
+        <div class="section-sub">Metodo e impegni</div>
+      </div>
+    </div>
+    <div class="note success">
+      <div class="note-title">Impegni operativi</div>
+      <div class="note-item">Il progetto ADJ è seguito direttamente come referente unico con <strong>priorità assoluta</strong> — un singolo interlocutore per tutte le aree, nessun passaggio di consegne, nessuna burocrazia agenziale.</div>
+      <div class="note-item">Per attività specifiche o situazioni di urgenza, mi avvalgo di collaboratori selezionati e di <strong>Elifive Studio</strong> (Vasto), agenzia partner con cui collaboro da anni — garantendo continuità operativa in qualsiasi circostanza.</div>
+      <div class="note-item">Disponibilità continuativa, risposte rapide e aggiornamenti costanti sull'avanzamento del lavoro.</div>
+      <div class="note-item">Consegna del sito entro <strong>60 giorni</strong> dalla ricezione completa di tutti i materiali e credenziali necessarie.</div>
+      <div class="note-item">Gli aggiornamenti dei contenuti saranno gestibili autonomamente dal team ADJ, con la possibilità di ricevere video tutorial dedicati per ogni area del sito.</div>
+    </div>
+  </div>
+
+  <!-- CONDIZIONI -->
+  <div class="section fade fade-6">
+    <div class="section-head">
+      <div class="section-num" style="color: var(--border); font-size: 28px; min-width: 52px; padding-top: 6px;">§</div>
+      <div class="section-info">
+        <div class="section-title">Condizioni</div>
+        <div class="section-sub">Modalità di pagamento e note operative</div>
+      </div>
+    </div>
+    <div class="conditions-grid">
+      <div class="condition-cell">
+        <div class="condition-label">Modalità di pagamento</div>
+        <div class="condition-text">40% all'accettazione del preventivo · 40% alla consegna del sito · 20% dopo 30 giorni dalla messa online. Il canone mensile è fatturato il primo di ogni mese.</div>
+      </div>
+      <div class="condition-cell">
+        <div class="condition-label">Condizione di avvio</div>
+        <div class="condition-text">Il progetto si intende avviato dalla data di ricezione completa di tutti i materiali e delle credenziali necessarie.</div>
+      </div>
+      <div class="condition-cell">
+        <div class="condition-label">Attività extra</div>
+        <div class="condition-text">Qualsiasi attività non compresa nel canone ordinario viene concordata preventivamente e fatturata a <strong>40 €/ora</strong> — tariffa riservata nell'ambito della collaborazione continuativa.</div>
+      </div>
+      <div class="condition-cell">
+        <div class="condition-label">Budget pubblicitario</div>
+        <div class="condition-text">Il budget per campagne Google Ads / Meta Ads è sempre intestato ad ADJ e non rientra nelle fee di gestione.</div>
+      </div>
+      <div class="condition-cell">
+        <div class="condition-label">Regime fiscale</div>
+        <div class="condition-text">Prestazione resa in regime forfettario ex L. 190/2014 — operazione non soggetta ad IVA. Agli importi indicati si applica il contributo alla gestione separata INPS pari al <strong>+4%</strong> sul totale imponibile.</div>
+      </div>
+      <div class="condition-cell">
+        <div class="condition-label">Validità</div>
+        <div class="condition-text">Il presente preventivo è valido <strong>30 giorni</strong> dalla data di emissione.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-left">
+    <strong>Cesare Mich</strong>
+    P.IVA [inserire] &nbsp;·&nbsp; [email] &nbsp;·&nbsp; [telefono]
+  </div>
+  <div class="footer-right">
+    Preventivo n. 001/2025<br>
+    14 maggio 2025
+  </div>
+</footer>
+
+<script>
+var fsSizes = [85, 92, 100, 108, 116, 125];
+var fsLabels = ['85%','92%','100%','108%','116%','125%'];
+var fsIdx = 2;
+
+function changeFS(dir) {
+  fsIdx = Math.max(0, Math.min(fsSizes.length - 1, fsIdx + dir));
+  document.documentElement.style.fontSize = fsSizes[fsIdx] + '%';
+  document.getElementById('fs-val').textContent = fsLabels[fsIdx];
+}
+
+var isDark = false;
+function toggleDark() {
+  isDark = !isDark;
+  document.body.classList.toggle('dark', isDark);
+  var icon = document.getElementById('dm-icon');
+  var label = document.getElementById('dm-label');
+  if (isDark) {
+    icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+    label.textContent = 'Light mode';
+  } else {
+    icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    label.textContent = 'Dark mode';
+  }
+}
+</script>
+
+</body>
+</html>
